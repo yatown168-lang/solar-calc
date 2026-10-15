@@ -1,341 +1,428 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>透天太陽能防水光電棚 收益與黃金片數試算器 - 雅唐股份有限公司</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brandOrange: { DEFAULT: '#E56A21', hover: '#D05B15', light: '#FFF4ED' },
-            brandGreen: { DEFAULT: '#41C056', hover: '#34A245', light: '#E8F8EA' },
-            brandDark: '#2C3539',
-            brandGray: '#F7F9FB'
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅唐股份有限公司 - 太陽能防水光電棚收益試算器</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        yatang: {
+                            orange: '#E56A21',
+                            'orange-hover': '#cf5917',
+                            'orange-light': '#FFF5EE',
+                            green: '#41C056',
+                            'green-hover': '#35a246',
+                            'green-light': '#F0FBF2',
+                            dark: '#2D3748',
+                            gray: '#718096'
+                        }
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background-color: #F7F9FB;
-      color: #2C3539;
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 28px;
-      width: 28px;
-      border-radius: 50%;
-      background: #E56A21;
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(229, 106, 33, 0.4);
-      margin-top: -10px;
-    }
-    input[type=range]::-webkit-slider-runnable-track {
-      width: 100%;
-      height: 8px;
-      cursor: pointer;
-      background: #E2E8F0;
-      border-radius: 4px;
-    }
-    .custom-card {
-      background: #FFFFFF;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-    }
-  </style>
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #F8FAFC;
+        }
+        /* Custom range slider thumb styling */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #E56A21;
+            cursor: pointer;
+            border: 3px solid #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+    </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
-  <div class="max-w-4xl mx-auto custom-card overflow-hidden border border-slate-100">
-    <!-- Header -->
-    <div class="bg-white border-b border-slate-100 p-6 md:p-8">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-        <div class="flex items-center gap-4">
-          <div class="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 flex items-center justify-center rounded-2xl bg-slate-50 p-2 border border-slate-100">
-            <svg viewBox="0 0 400 350" class="w-full h-full">
-              <path d="M 40 230 A 160 160 0 0 1 360 230" fill="none" stroke="#E56A21" stroke-width="36" stroke-linecap="round"/>
-              <path d="M 200 120 C 170 160, 130 190, 110 230 C 170 230, 180 200, 200 180 C 220 200, 230 230, 290 230 C 270 190, 230 160, 200 120 Z" fill="#41C056"/>
-              <line x1="120" y1="245" x2="280" y2="245" stroke="#41C056" stroke-width="10" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-brandOrange-light text-brandOrange border border-brandOrange/20">雅唐股份有限公司</span>
-              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-brandGreen-light text-brandGreen border border-brandGreen/20">專利防水架構</span>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-yatang-green text-xl"></i>
+        <span id="toast-msg" class="font-medium">已成功複製試算結果！</span>
+    </div>
+
+    <div>
+        <!-- Header -->
+        <header class="bg-white border-b border-orange-100 shadow-sm sticky top-0 z-40">
+            <div class="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <img src="Logo色碼.jpg" alt="雅唐股份有限公司 Logo" class="h-12 sm:h-14 w-auto object-contain" onerror="this.onerror=null; this.src='https://placehold.co/180x60/E56A21/ffffff?text=Green+Art';">
+                    <div class="h-8 w-px bg-slate-200 hidden sm:block"></div>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-black tracking-tight text-slate-800 flex items-center gap-2">
+                            雅唐股份有限公司
+                        </h1>
+                        <p class="text-xs sm:text-sm font-medium text-slate-500">太陽能防水光電棚 ‧ 綠能與收益黃金比試算器</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full bg-yatang-green-light text-yatang-green border border-green-200">
+                    <i class="fa-solid fa-shield-halved"></i> 115年度最新躉購電價費率標準
+                </div>
             </div>
-            <h1 class="text-2xl md:text-3xl font-black text-brandDark mt-1">透天光電棚 收益與試算器</h1>
-          </div>
-        </div>
-        <div class="text-right hidden md:block">
-          <span class="text-xs text-slate-400 block">2026 最新躉購費率精算</span>
-          <span class="text-sm font-bold text-brandGreen flex items-center gap-1 justify-end mt-1">
-            <i class="fa-solid fa-shield-halved"></i> 免雜項執照合規認證
-          </span>
-        </div>
-      </div>
+        </header>
+
+        <main class="max-w-6xl mx-auto px-4 py-6 sm:py-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Left Column: Input Panel -->
+                <div class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100">
+                    <div class="border-b border-slate-100 pb-4 mb-6">
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-xl bg-yatang-orange-light text-yatang-orange flex items-center justify-center font-bold text-sm">1</span>
+                            設定您的屋頂條件
+                        </h2>
+                    </div>
+
+                    <!-- Region Selection -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-700 mb-2">地理區域 (影響年發電量效益)</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button id="region-south" onclick="setRegion('south')" class="py-3 px-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 border-yatang-orange bg-yatang-orange-light text-yatang-orange shadow-sm">
+                                <i class="fa-solid fa-sun text-lg"></i> 中南部 / 高日照
+                            </button>
+                            <button id="region-north" onclick="setRegion('north')" class="py-3 px-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 border-slate-200 bg-white text-slate-600 hover:border-slate-300">
+                                <i class="fa-solid fa-cloud-sun text-lg"></i> 北部 ‧ 花東地區
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Area Range Input -->
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm font-bold text-slate-700">屋頂預計建置坪數</label>
+                            <span class="text-2xl font-black text-yatang-orange"><span id="area-val">20</span> <span class="text-sm text-slate-500 font-semibold">坪</span></span>
+                        </div>
+                        <input type="range" id="area-slider" min="5" max="50" step="1" value="20" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-yatang-orange" oninput="updateCalculations()">
+                        <div class="flex justify-between text-xs font-semibold text-slate-400 mt-2">
+                            <span>5 坪</span>
+                            <span>25 坪</span>
+                            <span>50 坪</span>
+                        </div>
+                    </div>
+
+                    <!-- Smart Recommendation Banner -->
+                    <div id="smart-recommendation" class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm leading-relaxed mb-6 hidden">
+                        <div class="font-bold flex items-center gap-2 text-amber-700 mb-1">
+                            <i class="fa-solid fa-lightbulb text-base"></i> 雅唐專業黃金配置建議：
+                        </div>
+                        若屋頂約 <span class="font-bold text-yatang-orange">15~18 坪</span>，強烈建議太陽能板精準鎖定 <span class="font-bold">24 片 (9.84 kW)</span> 享最高電價，剩餘坪數搭配『<span class="font-bold text-yatang-green">雅唐專利防水補板</span>』，可省下約 3~5 萬元的台電三相電與外線升級開銷！
+                    </div>
+
+                    <!-- Param Summary Badges -->
+                    <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-100 text-xs text-slate-600">
+                        <div class="flex justify-between">
+                            <span>躉購費率階梯 (115年)：</span>
+                            <span id="rate-tier-badge" class="font-bold text-slate-800">高效能 5.6279 元/度</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>平均日照時數估計：</span>
+                            <span id="sunshine-badge" class="font-bold text-slate-800">3.5 小時/日</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>組合配比策略：</span>
+                            <span id="ratio-badge" class="font-bold text-yatang-green">光電板 + 防水補板全覆蓋</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Results & Analytics -->
+                <div class="lg:col-span-7 space-y-6">
+                    
+                    <!-- Output Metrics Grid -->
+                    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+                            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <span class="w-8 h-8 rounded-xl bg-yatang-green-light text-yatang-green flex items-center justify-center font-bold text-sm">2</span>
+                                預估效益與建置資產配置
+                            </h2>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">即時運算</span>
+                        </div>
+
+                        <!-- Top 2 Key Numbers -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <div class="p-5 rounded-2xl bg-gradient-to-br from-yatang-orange-light to-orange-50 border border-orange-100">
+                                <div class="text-xs font-bold text-slate-500 mb-1">預估年售電收入 (NT$)</div>
+                                <div class="text-3xl font-black text-yatang-orange" id="annual-income">$0</div>
+                                <div class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                                    <i class="fa-solid fa-coins text-amber-500"></i> 月平均收入約 <span id="monthly-income" class="font-bold text-slate-700">$0</span>
+                                </div>
+                            </div>
+                            <div class="p-5 rounded-2xl bg-gradient-to-br from-yatang-green-light to-green-50 border border-green-100">
+                                <div class="text-xs font-bold text-slate-500 mb-1">20年累積純淨利 (NT$)</div>
+                                <div class="text-3xl font-black text-yatang-green" id="net-profit">$0</div>
+                                <div class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                                    <i class="fa-solid fa-chart-line text-yatang-green"></i> 扣除初始建置成本後淨獲利
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel & Board Specs Breakdown -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 text-center">
+                                <div class="text-xs text-slate-500 font-medium mb-1">太陽能板片數</div>
+                                <div class="text-xl font-extrabold text-slate-800" id="solar-panels">0 片</div>
+                                <div class="text-[10px] text-slate-400 mt-0.5" id="solar-kw">0 kW</div>
+                            </div>
+                            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 text-center">
+                                <div class="text-xs text-slate-500 font-medium mb-1">雅唐專利防水補板</div>
+                                <div class="text-xl font-extrabold text-yatang-green" id="filler-boards">0 片</div>
+                                <div class="text-[10px] text-slate-400 mt-0.5" id="filler-area">0 坪</div>
+                            </div>
+                            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 text-center">
+                                <div class="text-xs text-slate-500 font-medium mb-1">預估建置總成本</div>
+                                <div class="text-xl font-extrabold text-slate-800" id="total-cost">$0</div>
+                                <div class="text-[10px] text-slate-400 mt-0.5">含採光防水棚結構</div>
+                            </div>
+                            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 text-center">
+                                <div class="text-xs text-slate-500 font-medium mb-1">預計回本年限</div>
+                                <div class="text-xl font-extrabold text-slate-800" id="payback-years">0 年</div>
+                                <div class="text-[10px] text-slate-400 mt-0.5">回本後全數純收益</div>
+                            </div>
+                        </div>
+
+                        <!-- Layout Visual Bar -->
+                        <div class="mb-6">
+                            <div class="flex justify-between text-xs font-bold text-slate-600 mb-1.5">
+                                <span>屋頂空間遮陽防水佈局：</span>
+                                <span id="bar-percentage-text">太陽能 100% | 補板 0%</span>
+                            </div>
+                            <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden flex p-0.5 border border-slate-200">
+                                <div id="bar-solar" class="h-full bg-yatang-orange rounded-l-full transition-all duration-500" style="width: 100%;"></div>
+                                <div id="bar-filler" class="h-full bg-yatang-green rounded-r-full transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Action Share Button -->
+                        <button onclick="copyResults()" class="w-full py-4 px-6 rounded-2xl bg-yatang-orange hover:bg-yatang-orange-hover text-white font-bold text-base shadow-lg shadow-orange-500/20 transition-all flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-copy text-lg"></i> 一鍵複製試算結果 (方便 LINE 分享)
+                        </button>
+                    </div>
+
+                    <!-- Advantage Card -->
+                    <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-3xl p-6 text-white shadow-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-yatang-green/20 text-yatang-green flex items-center justify-center font-bold text-lg">
+                                <i class="fa-solid fa-gem"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-base">雅唐專利防水光電棚 ‧ 三重防護價值</h3>
+                                <p class="text-xs text-slate-400">綠能發電 + 屋頂防漏水 + 隔熱降溫</p>
+                            </div>
+                        </div>
+                        <ul class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300 border-t border-slate-700/60 pt-4 mt-2">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-yatang-green mt-0.5"></i>
+                                <span><strong class="text-white">免申請雜項執照：</strong> 符合合法光電屋頂條例，安全無虞。</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-yatang-green mt-0.5"></i>
+                                <span><strong class="text-white">專利防水系統：</strong> 結合鋁合金結構，完美解決屋頂滲水問題。</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-yatang-green mt-0.5"></i>
+                                <span><strong class="text-white">黃金級隔熱：</strong> 阻絕 90% 太陽直射熱能，室內降溫 3~5°C。</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </main>
     </div>
 
-    <div class="p-6 md:p-8 space-y-8">
-      <!-- Input Controls -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Region -->
-        <div class="space-y-2">
-          <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
-            <i class="fa-solid fa-location-dot text-brandOrange"></i> 安裝縣市區域
-          </label>
-          <select id="regionSelect" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-brandOrange focus:outline-none">
-            <option value="1300">苗栗 / 台中 / 彰化 / 雲林 / 嘉義 (年光照約 1,300 hrs)</option>
-            <option value="1350" selected>台南 / 高雄 / 屏東 (年光照約 1,350 hrs)</option>
-            <option value="1200">南投 / 台東 (年光照約 1,200 hrs)</option>
-            <option value="1000">新北 / 台北 / 桃園 / 新竹 / 宜蘭 / 花蓮 (年光照約 1,000 hrs)</option>
-          </select>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+        <div class="max-w-6xl mx-auto px-4">
+            <p>© 雅唐股份有限公司 Yatang Co., Ltd. 版權所有 ‧ 專業採光罩/光電棚領導品牌</p>
+            <p class="mt-1 text-slate-400">※ 本工具試算結果係依經濟部能源署115年度躉購費率標準與平均日照數據進行預估，實際收益仍以現場會勘及台電竣工發電為準。</p>
         </div>
+    </footer>
 
-        <!-- Ping Slider -->
-        <div class="space-y-2">
-          <div class="flex justify-between items-center">
-            <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
-              <i class="fa-solid fa-house-chimney text-brandGreen"></i> 屋頂可用面積
-            </label>
-            <span class="text-lg font-black text-brandOrange"><span id="pingValue">15</span> 坪</span>
-          </div>
-          <input type="range" id="pingInput" min="5" max="50" value="15" step="1" class="w-full">
-          <div class="flex justify-between text-xs text-slate-400 font-medium">
-            <span>5 坪</span>
-            <span>20 坪</span>
-            <span>35 坪</span>
-            <span>50 坪</span>
-          </div>
-        </div>
-      </div>
+    <script>
+        // State variables
+        let selectedRegion = 'south'; // 'south' or 'north'
 
-      <!-- Critical Threshold Alert -->
-      <div id="thresholdNotice" class="hidden p-4 rounded-xl border bg-amber-50 border-amber-200 text-amber-900 text-sm flex gap-3 items-start">
-        <i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg mt-0.5"></i>
-        <div>
-          <strong class="font-bold block text-amber-950 mb-0.5">跨越 10 kW 門檻提醒 (15~18坪臨界點)：</strong>
-          <span id="noticeText">目前坪數若做滿太陽能板會跨越 10kW，需增加「三相電改管與外線工程」費用。建議鎖定 24 片 (9.84 kW) 享最高躉購價 ($5.6279)，剩餘空間搭配雅唐專利防水補板！</span>
-        </div>
-      </div>
+        // Constants & Business Logic
+        const PANEL_KW = 0.41; // 410W per solar panel
+        const AREA_PER_PANEL = 0.625; // ~0.625 坪 per panel (approx 1.6坪/kW)
+        const COST_PER_KW = 62000; // Average cost per kW including structural frame
+        const FILLER_BOARD_COST_PER_PING = 18000; // Cost for Yatang waterproof board per ping
 
-      <!-- Results Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <!-- Panels -->
-        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-          <span class="text-xs text-slate-500 font-bold block mb-1">太陽能板片數</span>
-          <div class="text-2xl md:text-3xl font-black text-brandDark" id="solarPanels">24</div>
-          <span class="text-xs text-brandOrange font-bold mt-1 block" id="systemKw">約 9.84 kW</span>
-        </div>
+        function setRegion(region) {
+            selectedRegion = region;
+            const btnSouth = document.getElementById('region-south');
+            const btnNorth = document.getElementById('region-north');
 
-        <!-- Filler Boards -->
-        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-          <span class="text-xs text-slate-500 font-bold block mb-1">專利防水補板</span>
-          <div class="text-2xl md:text-3xl font-black text-brandGreen" id="fillerBoards">0</div>
-          <span class="text-xs text-slate-400 font-bold mt-1 block" id="fillerPingText">無需補板</span>
-        </div>
+            if (region === 'south') {
+                btnSouth.className = 'py-3 px-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 border-yatang-orange bg-yatang-orange-light text-yatang-orange shadow-sm';
+                btnNorth.className = 'py-3 px-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 border-slate-200 bg-white text-slate-600 hover:border-slate-300';
+            } else {
+                btnNorth.className = 'py-3 px-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 border-yatang-orange bg-yatang-orange-light text-yatang-orange shadow-sm';
+                btnSouth.className = 'py-3 px-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 border-slate-200 bg-white text-slate-600 hover:border-slate-300';
+            }
+            updateCalculations();
+        }
 
-        <!-- Annual Income -->
-        <div class="p-4 rounded-2xl bg-brandOrange-light/50 border border-brandOrange/20 text-center">
-          <span class="text-xs text-brandOrange font-bold block mb-1">預估每年賣電收入</span>
-          <div class="text-2xl md:text-3xl font-black text-brandOrange" id="annualIncome">$72,000</div>
-          <span class="text-xs text-slate-500 mt-1 block" id="tariffRate">單價 $5.6279 元/度</span>
-        </div>
+        function updateCalculations() {
+            const area = parseInt(document.getElementById('area-slider').value);
+            document.getElementById('area-val').innerText = area;
 
-        <!-- Payback Years -->
-        <div class="p-4 rounded-2xl bg-brandGreen-light/50 border border-brandGreen/20 text-center">
-          <span class="text-xs text-brandGreen font-bold block mb-1">預估回收年限</span>
-          <div class="text-2xl md:text-3xl font-black text-brandGreen" id="paybackYears">6.2 年</div>
-          <span class="text-xs text-slate-500 mt-1 block" id="twentyYearProfit">20年淨賺 $85萬</span>
-        </div>
-      </div>
+            let panelCount = 0;
+            let fillerPings = 0;
+            let rate = 5.6279; // High efficiency rate
+            const recBox = document.getElementById('smart-recommendation');
 
-      <!-- Strategy Banner -->
-      <div class="p-5 rounded-2xl bg-slate-800 text-white flex flex-col md:flex-row justify-between items-center gap-4">
-        <div class="space-y-1 text-center md:text-left">
-          <div class="text-xs font-bold text-brandGreen uppercase tracking-wider">雅唐專利架構優勢</div>
-          <div class="text-base font-bold" id="strategyTitle">10 kW 以下黃金效益方案</div>
-          <p class="text-xs text-slate-300" id="strategyDesc">享最高收購電價，採用單相電免改管線開銷，回本最迅速。</p>
-        </div>
-        <div class="text-right border-t md:border-t-0 md:border-l border-slate-700 pt-3 md:pt-0 md:pl-6 w-full md:w-auto flex justify-between md:block">
-          <span class="text-xs text-slate-400 block">預估系統建置費用</span>
-          <span class="text-xl font-black text-brandOrange" id="estimatedCost">$60萬 ~ $68萬</span>
-        </div>
-      </div>
+            // 15~18 ping recommendation logic
+            if (area >= 15 && area <= 18) {
+                recBox.classList.remove('hidden');
+            } else {
+                recBox.classList.add('hidden');
+            }
 
-      <!-- Features Checklist -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 font-medium">
-        <div class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
-          <i class="fa-solid fa-circle-check text-brandGreen text-base"></i>
-          <span>雅唐專利防水導水鋁支架</span>
-        </div>
-        <div class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
-          <i class="fa-solid fa-circle-check text-brandGreen text-base"></i>
-          <span>免雜項執照 (4.5M以下合規)</span>
-        </div>
-        <div class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100">
-          <i class="fa-solid fa-circle-check text-brandGreen text-base"></i>
-          <span>台電 20 年保證原價收購</span>
-        </div>
-      </div>
+            // Area Capacity Rules
+            if (area <= 15) {
+                // Up to 15 pings -> 100% Solar Panels (~24 panels max / 9.84 kW)
+                panelCount = Math.floor(area / AREA_PER_PANEL);
+                if (panelCount > 24) panelCount = 24;
+                fillerPings = Math.max(0, area - (panelCount * AREA_PER_PANEL));
+                rate = 5.6279;
+            } else if (area > 15 && area <= 18) {
+                // Smart lock to 24 panels (~9.84kW) to avoid 3-phase grid upgrade costs
+                panelCount = 24;
+                fillerPings = area - (panelCount * AREA_PER_PANEL);
+                rate = 5.6279;
+            } else if (area > 18 && area <= 30) {
+                // 19 ~ 30 pings: Cover ALL roof area with solar panels up to 48 panels (~19.68 kW) with ZERO filler boards
+                panelCount = Math.min(48, Math.floor(area / AREA_PER_PANEL));
+                fillerPings = 0; // Pure solar coverage for 30~48 panels range
+                rate = 5.3819;
+            } else {
+                // > 30 pings: Cap solar panels at 48 panels (19.68 kW) to stay under 20kW threshold, fill rest with waterproof board
+                panelCount = 48; // Max 48 panels ~ 19.68 kW
+                fillerPings = area - (panelCount * AREA_PER_PANEL);
+                rate = 5.3819;
+            }
 
-      <!-- Action Button -->
-      <div class="pt-2">
-        <button id="copyBtn" class="w-full py-4 bg-brandOrange hover:bg-brandOrange-hover text-white font-bold rounded-2xl shadow-lg shadow-brandOrange/25 transition flex items-center justify-center gap-2 text-base">
-          <i class="fa-regular fa-copy"></i> 複製試算結果 (可直接貼給專員 LINE)
-        </button>
-      </div>
-    </div>
-  </div>
+            const fillerBoardsCount = fillerPings > 0 ? Math.ceil(fillerPings / AREA_PER_PANEL) : 0;
+            const totalKW = panelCount * PANEL_KW;
 
-  <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-bold opacity-0 transition-opacity duration-300 pointer-events-none flex items-center gap-2 shadow-2xl z-50">
-    <i class="fa-solid fa-circle-check text-brandGreen"></i>
-    <span>試算結果已複製到剪貼簿！</span>
-  </div>
+            // Sunshine daily hours
+            const dailySunshine = selectedRegion === 'south' ? 3.6 : 2.8;
 
-  <script>
-    const pingInput = document.getElementById('pingInput');
-    const pingValue = document.getElementById('pingValue');
-    const regionSelect = document.getElementById('regionSelect');
+            // Financial Calculations
+            const totalSolarCost = totalKW * COST_PER_KW;
+            const totalFillerCost = fillerPings * FILLER_BOARD_COST_PER_PING;
+            const totalInvestmentCost = totalSolarCost + totalFillerCost;
 
-    const solarPanelsEl = document.getElementById('solarPanels');
-    const systemKwEl = document.getElementById('systemKw');
-    const fillerBoardsEl = document.getElementById('fillerBoards');
-    const fillerPingTextEl = document.getElementById('fillerPingText');
-    const annualIncomeEl = document.getElementById('annualIncome');
-    const tariffRateEl = document.getElementById('tariffRate');
-    const paybackYearsEl = document.getElementById('paybackYears');
-    const twentyYearProfitEl = document.getElementById('twentyYearProfit');
-    const strategyTitleEl = document.getElementById('strategyTitle');
-    const strategyDescEl = document.getElementById('strategyDesc');
-    const estimatedCostEl = document.getElementById('estimatedCost');
-    const thresholdNotice = document.getElementById('thresholdNotice');
-    const noticeText = document.getElementById('noticeText');
-    const copyBtn = document.getElementById('copyBtn');
-    const toast = document.getElementById('toast');
+            const annualKWh = totalKW * dailySunshine * 365;
+            const annualIncome = annualKWh * rate;
+            const monthlyIncome = annualIncome / 12;
 
-    function calculate() {
-      const ping = parseFloat(pingInput.value);
-      const sunHours = parseFloat(regionSelect.value);
-      pingValue.textContent = ping;
+            const paybackYears = totalInvestmentCost > 0 ? (totalInvestmentCost / annualIncome) : 0;
+            const total20YearsIncome = annualIncome * 20;
+            const netProfit20Years = total20YearsIncome - totalInvestmentCost;
 
-      let panels = 0;
-      let fillerPings = 0;
-      let kw = 0;
-      let tariff = 5.6279;
-      let title = "";
-      let desc = "";
-      let costMin = 0;
-      let costMax = 0;
-      let showNotice = false;
+            // Percentage calculation for visualization bar
+            const solarAreaPing = panelCount * AREA_PER_PANEL;
+            const solarPercent = Math.min(100, Math.round((solarAreaPing / area) * 100));
+            const fillerPercent = 100 - solarPercent;
 
-      if (ping <= 14) {
-        panels = Math.floor(ping / 0.6);
-        kw = panels * 0.41;
-        tariff = 5.6279;
-        fillerPings = 0;
-        title = "最高單價極致回本方案";
-        desc = "容量控制在 10 kW 內，享有最高躉購費率，使用單相電免額外線路改管費用。";
-        showNotice = false;
-      } else if (ping >= 15 && ping <= 18) {
-        panels = 24;
-        kw = 9.84;
-        tariff = 5.6279;
-        fillerPings = ping - 14.4;
-        title = "黃金 9.84 kW + 專利防水補板方案";
-        desc = "精準控制太陽能板在 24 片 (10kW內)，免去三相電升級費，剩餘屋頂搭配雅唐專利防水補板完全遮雨！";
-        showNotice = true;
-        noticeText.textContent = `屋頂為 ${ping} 坪，若太陽能板鋪滿將跨越 10kW 門檻產生三相電與線路升級費。建議設 24 片 (9.84kW) 享最高電價，其餘 ${fillerPings.toFixed(1)} 坪搭配雅唐專利防水補板！`;
-      } else if (ping >= 19 && ping <= 30) {
-        panels = Math.min(48, Math.floor(ping / 0.6));
-        kw = panels * 0.41;
-        tariff = 5.3819;
-        fillerPings = 0;
-        title = "大坪數高收益升級方案";
-        desc = "屋頂 100% 鋪設太陽能板，充分發揮大坪數規模效益，攤平固定工程成本。";
-        showNotice = false;
-      } else {
-        panels = 48;
-        kw = 19.68;
-        tariff = 5.3819;
-        fillerPings = ping - 28.8;
-        title = "黃金 19.68 kW 上限 + 防水補板方案";
-        desc = "太陽能板鎖定在 20 kW 最高級距上限 (48片)，避免跨越 20kW 導致電價掉級，剩餘坪數搭配防水補板！";
-        showNotice = true;
-        noticeText.textContent = `屋頂大於 30 坪，將太陽能板鎖定在 48 片 (${kw.toFixed(2)} kW)，可維持最高收購價 ($5.3819)，剩餘 ${fillerPings.toFixed(1)} 坪使用雅唐專利防水補板，兼具 100% 遮雨與最高收益！`;
-      }
+            // UI Updates
+            document.getElementById('solar-panels').innerText = `${panelCount} 片`;
+            document.getElementById('solar-kw').innerText = `約 ${totalKW.toFixed(2)} kW`;
 
-      const fillerBoardsCount = Math.ceil(fillerPings / 0.6);
-      const annualKwh = kw * sunHours;
-      const annualIncome = Math.round(annualKwh * tariff);
+            document.getElementById('filler-boards').innerText = `${fillerBoardsCount} 片`;
+            document.getElementById('filler-area').innerText = `約 ${fillerPings.toFixed(1)} 坪`;
 
-      if (kw <= 10) {
-        costMin = Math.round(kw * 6.2);
-        costMax = Math.round(kw * 6.8);
-      } else {
-        costMin = Math.round(kw * 5.8 + 3);
-        costMax = Math.round(kw * 6.4 + 4);
-      }
+            document.getElementById('annual-income').innerText = `$${Math.round(annualIncome).toLocaleString()}`;
+            document.getElementById('monthly-income').innerText = `$${Math.round(monthlyIncome).toLocaleString()}`;
 
-      if (fillerPings > 0) {
-        const fillerCost = fillerPings * 0.8;
-        costMin += Math.round(fillerCost);
-        costMax += Math.round(fillerCost);
-      }
+            document.getElementById('net-profit').innerText = `$${Math.round(netProfit20Years).toLocaleString()}`;
+            document.getElementById('total-cost').innerText = `$${Math.round(totalInvestmentCost).toLocaleString()}`;
+            document.getElementById('payback-years').innerText = `${paybackYears.toFixed(1)} 年`;
 
-      const avgCost = ((costMin + costMax) / 2) * 10000;
-      const payback = (avgCost / annualIncome).toFixed(1);
-      const profit20Years = Math.round(((annualIncome * 20) - avgCost) / 10000);
+            // Badge text updates
+            document.getElementById('rate-tier-badge').innerText = `${totalKW < 10 ? '1-10kW高費率' : '10-20kW階梯'} ${rate.toFixed(4)} 元/度`;
+            document.getElementById('sunshine-badge').innerText = `${dailySunshine} 小時/日`;
+            document.getElementById('ratio-badge').innerText = `太陽能 ${solarPercent}% + 專利補板 ${fillerPercent}%`;
 
-      solarPanelsEl.textContent = panels;
-      systemKwEl.textContent = `約 ${kw.toFixed(2)} kW`;
-      fillerBoardsEl.textContent = fillerBoardsCount;
-      fillerPingTextEl.textContent = fillerPings > 0 ? `補板 ${fillerPings.toFixed(1)} 坪` : "無需補板";
+            // Layout Bar
+            document.getElementById('bar-solar').style.width = `${solarPercent}%`;
+            document.getElementById('bar-filler').style.width = `${fillerPercent}%`;
+            document.getElementById('bar-percentage-text').innerText = `太陽能 ${solarPercent}% | 雅唐防水補板 ${fillerPercent}%`;
+        }
 
-      annualIncomeEl.textContent = `$${annualIncome.toLocaleString()}`;
-      tariffRateEl.textContent = `單價 $${tariff.toFixed(4)} 元/度`;
+        function copyResults() {
+            const area = document.getElementById('area-slider').value;
+            const panels = document.getElementById('solar-panels').innerText;
+            const fillers = document.getElementById('filler-boards').innerText;
+            const kw = document.getElementById('solar-kw').innerText;
+            const cost = document.getElementById('total-cost').innerText;
+            const annual = document.getElementById('annual-income').innerText;
+            const netProfit = document.getElementById('net-profit').innerText;
+            const payback = document.getElementById('payback-years').innerText;
+            const regionText = selectedRegion === 'south' ? '中南部' : '北部/花東';
 
-      paybackYearsEl.textContent = `${payback} 年`;
-      twentyYearProfitEl.textContent = `20年淨賺約 $${profit20Years} 萬`;
+            const summaryText = `【雅唐太陽能防水光電棚 - 試算結果】\n` +
+                `📍 評估條件：${area} 坪 (${regionText})\n` +
+                `☀️ 太陽能板：${panels} (${kw})\n` +
+                `🛡️ 雅唐專利防水補板：${fillers}\n` +
+                `💰 預估建置總成本：${cost}\n` +
+                `📈 預估年售電收入：${annual}\n` +
+                `⏱️ 預計回本年限：${payback}\n` +
+                `🎉 20年累積純淨利：${netProfit}\n\n` +
+                `雅唐股份有限公司 ‧ 綠能與防水一次到位！`;
 
-      strategyTitleEl.textContent = title;
-      strategyDescEl.textContent = desc;
-      estimatedCostEl.textContent = `$${costMin}萬 ~ $${costMax}萬`;
+            // Copy using text area fallback for broad browser support
+            const textArea = document.createElement("textarea");
+            textArea.value = summaryText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast("已成功複製試算結果，可直接貼上至 LINE 分享！");
+            } catch (err) {
+                showToast("複製失敗，請手動截圖分享。");
+            }
+            document.body.removeChild(textArea);
+        }
 
-      if (showNotice) {
-        thresholdNotice.classList.remove('hidden');
-      } else {
-        thresholdNotice.classList.add('hidden');
-      }
-    }
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            toastMsg.innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
 
-    pingInput.addEventListener('input', calculate);
-    regionSelect.addEventListener('change', calculate);
-    calculate();
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
 
-    copyBtn.addEventListener('click', () => {
-      const summary = `【雅唐太陽能防水光電棚 - 試算結果】\n` +
-        `• 區域光照：${regionSelect.options[regionSelect.selectedIndex].text.split('(')[0]}\n` +
-        `• 屋頂面積：${pingInput.value} 坪\n` +
-        `• 太陽能板：${solarPanelsEl.textContent} 片 (${systemKwEl.textContent})\n` +
-        `• 防水補板：${fillerBoardsEl.textContent} 片 (${fillerPingTextEl.textContent})\n` +
-        `• 預估年售電收入：${annualIncomeEl.textContent} 元/年 (${tariffRateEl.textContent})\n` +
-        `• 預估建置費用：${estimatedCostEl.textContent}\n` +
-        `• 回收年限：約 ${paybackYearsEl.textContent} (20年預估淨利 ${twentyYearProfitEl.textContent})\n` +
-        `👉 歡迎預約現場免費勘查與精算設計！`;
-
-      navigator.clipboard.writeText(summary).then(() => {
-        toast.classList.remove('opacity-0');
-        setTimeout(() => toast.classList.add('opacity-0'), 2500);
-      });
-    });
-  </script>
+        // Initialize calculations on page load
+        window.onload = function() {
+            updateCalculations();
+        };
+    </script>
 </body>
 </html>
